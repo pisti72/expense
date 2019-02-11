@@ -3,20 +3,38 @@
 
 <head>
     <title>Expenses</title>
+    <!--
     <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+    -->
+    <link rel="stylesheet" href="w3.css">
     <script src="ajax.js"></script>
 </head>
 
-<body>
+<body onload="init()">
     <div class="w3-container w3-teal w3-jumbo">
-        <h1>Money tracker</h1>
+        <h1>Expense</h1>
     </div>
     <div class="w3-container">
-        <input id="amount" class="w3-input w3-jumbo w3-section" type="number" placeholder="Amount">
-        <input id="category" class="w3-input w3-jumbo w3-section" type="text" placeholder="Category">
-        <input id="description" class="w3-input w3-jumbo w3-section" type="text" placeholder="Description">
-        <button class="w3-button w3-green w3-jumbo w3-section" onclick="send()">Expense</button>
+        <input id="amount" class="w3-input w3-xxxlarge w3-section" type="number" placeholder="Amount">
+        <input id="category" class="w3-input w3-xxxlarge w3-section" type="text" placeholder="Category">
+        <input id="description" class="w3-input w3-xxxlarge w3-section" type="text" placeholder="Description">
+        <button class="w3-button w3-green w3-xxxlarge w3-section" onclick="sendExpense()">Expense</button>
+        <!--<button class="w3-button w3-green w3-xxxlarge w3-section" onclick="fetchTransactions()">Refresh</button>-->
     </div>
+    <div class="w3-container">
+        <p id="transactions"></p>
+    </div>
+
+    <div class="w3-container w3-teal w3-jumbo">
+        <h1>Create User</h1>
+    </div>
+    <div class="w3-container">
+        <input id="name" class="w3-input w3-xxxlarge w3-section" type="text" placeholder="Name">
+        <input id="password" class="w3-input w3-xxxlarge w3-section" type="password" placeholder="Password">
+        <input id="email" class="w3-input w3-xxxlarge w3-section" type="text" placeholder="Email">
+        <button class="w3-button w3-green w3-xxxlarge w3-section" onclick="createUser()">Create</button>
+    </div>
+    <div id="version"></div>
 </body>
 
 </html>
