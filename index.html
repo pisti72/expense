@@ -3,37 +3,68 @@
 
 <head>
     <title>Expenses</title>
+    <meta charset="UTF-8">
     <!--
     <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
     -->
     <link rel="stylesheet" href="w3.css">
+    <style>
+        #main, #create_user, #login_wrong, #register_wrong {
+            display: none;
+        }
+    </style>
     <script src="ajax.js"></script>
 </head>
 
 <body onload="init()">
-    <div class="w3-container w3-teal w3-jumbo">
-        <h1>Expense</h1>
+    <div class="w3-container w3-teal">
+        <div class="w3-row">
+            <div class="w3-col m6 l10">
+                <h1>Expense</h1>
+            </div>
+            <div class="w3-col m6 l2 w3-section">
+                <div id="user" class="">You are not logged in</div>
+            </div>
+        </div>
     </div>
-    <div class="w3-container">
-        <input id="amount" class="w3-input w3-xxxlarge w3-section" type="number" placeholder="Amount">
-        <input id="category" class="w3-input w3-xxxlarge w3-section" type="text" placeholder="Category">
-        <input id="description" class="w3-input w3-xxxlarge w3-section" type="text" placeholder="Description">
-        <button class="w3-button w3-green w3-xxxlarge w3-section" onclick="sendExpense()">Expense</button>
-        <!--<button class="w3-button w3-green w3-xxxlarge w3-section" onclick="fetchTransactions()">Refresh</button>-->
+    <!--Login dialog and landig page with nice background-->
+    <div id="login" class="w3-container">
+        <input id="login_name" class="w3-input w3-xxxlarge w3-section" type="text" placeholder="Login name or Email">
+        <input id="login_password" class="w3-input w3-xxxlarge w3-section" type="password" placeholder="Password">
+        <div id="login_wrong" class="w3-panel w3-red">
+            <p>Wrong username or password!</p>
+        </div>
+        <button class="w3-button w3-green w3-xxxlarge w3-section" onclick="login()">Login</button>
+        <button class="w3-button w3-green w3-xxxlarge w3-section" onclick="register()">Sign up</button>
+        <p id="users"></p>
     </div>
-    <div class="w3-container">
-        <p id="transactions"></p>
+    <!--Expense and Income-->
+    <div id="main">
+        <div class="w3-container">
+            <input id="amount" class="w3-input w3-xxxlarge w3-section" type="number" placeholder="Amount">
+            <input id="category" class="w3-input w3-xxxlarge w3-section" type="text" placeholder="Category">
+            <input id="description" class="w3-input w3-xxxlarge w3-section" type="text" placeholder="Description">
+            <button class="w3-button w3-green w3-xxxlarge w3-section" onclick="sendExpense()">Expense</button>
+        </div>
+        <div class="w3-container">
+            <p id="transactions"></p>
+        </div>
+    </div>
+    <!--Create user-->
+    <div id="create_user">
+        <div class="w3-container">
+            <input id="name" class="w3-input w3-xxxlarge w3-section" type="text" placeholder="Name">
+            <input id="password" class="w3-input w3-xxxlarge w3-section" type="password" placeholder="Password">
+            <input id="email" class="w3-input w3-xxxlarge w3-section" type="text" placeholder="Email">
+            <div id="register_wrong" class="w3-panel w3-red">
+                <p>Username or email already exists!</p>
+            </div>
+            <button class="w3-button w3-green w3-xxxlarge w3-section" onclick="createUser()">Sign up</button>
+            <button class="w3-button w3-green w3-xxxlarge w3-section" onclick="backToLogin()">Cancel</button>
+        </div>
     </div>
 
-    <div class="w3-container w3-teal w3-jumbo">
-        <h1>Create User</h1>
-    </div>
-    <div class="w3-container">
-        <input id="name" class="w3-input w3-xxxlarge w3-section" type="text" placeholder="Name">
-        <input id="password" class="w3-input w3-xxxlarge w3-section" type="password" placeholder="Password">
-        <input id="email" class="w3-input w3-xxxlarge w3-section" type="text" placeholder="Email">
-        <button class="w3-button w3-green w3-xxxlarge w3-section" onclick="createUser()">Create</button>
-    </div>
+    <!--Footer-->
     <div id="version"></div>
 </body>
 

@@ -9,7 +9,9 @@ https://scotch.io/tutorials/how-to-use-the-javascript-fetch-api-to-get-data
 
 //const baseurl = 'http://expense.atw.hu/api.php';
 const baseurl = 'api.php';
-const version = '0.3';
+const version = '0.4';
+const NULLUSER = 'nulluser';
+var User = { name: 'nobody', token: NULLUSER }
 
 function sendExpense() {
     let amount = f('amount').value;
@@ -19,7 +21,8 @@ function sendExpense() {
     let data = {
         amount: amount,
         category: category,
-        description: description
+        description: description,
+        token: User.token
     }
     let fd = new FormData();
     for (var i in data) {
@@ -33,11 +36,9 @@ function sendExpense() {
     }
     fetch(baseurl, fetchData)
         .then(function (data) {
-            //empty field
             f('amount').value = '';
             f('category').value = '';
             f('description').value = '';
-            //refresh transactions
             fetchTransactions();
             console.log(data);
         })
@@ -49,7 +50,7 @@ function sendExpense() {
 }
 
 function fetchTransactions() {
-    let url = 'api.php?id=1&top=5';
+    let url = 'api.php?token=' + User.token + '&top=5';
 
     fetch(url)
         .then(response => response.json())
@@ -74,11 +75,26 @@ function fetchTransactions() {
         });
 }
 
+function fetchNumberOfUsers() {
+    let url = 'api.php?count=users';
+
+    fetch(url)
+        .then(response => response.json())
+        .then(body => {
+            f('users').innerHTML = 'We have ' + body.count + ' users.';
+        })
+
+        .catch(function (error) {
+            console.log('error');
+            // This is where you run code if the server returns any errors
+        });
+}
+
 function createUser() {
     let name = f('name').value;
     let password = f('password').value;
     let email = f('email').value;
-    //let param = '?amount=' + amount + '&category=' + category + '&description=' + description;
+
     let data = {
         name: name,
         password: password,
@@ -96,11 +112,20 @@ function createUser() {
     }
 
     fetch(baseurl, fetchData)
-        .then(function (data) {
+        .then(response => response.json())
+        .then(body => {
             f('name').value = '';
             f('password').value = '';
             f('email').value = '';
-            console.log(data);
+            console.log(body.result);
+            if(body.result == 'exists'){
+                show('register_wrong');
+            }else if(body.result == 'success') {
+                hide('register_wrong');
+                User.name = body.name;
+                User.token = body.token;
+                processLogin();
+            }
         })
 
         .catch(function (error) {
@@ -109,15 +134,81 @@ function createUser() {
         });
 }
 
+function backToLogin() {
+    show('login');
+    hide('create_user');
+}
+
 function init() {
     writeVersion();
+    fetchNumberOfUsers();
+
+    //fetchTransactions();
+    //getUser();
+}
+
+function login() {
+    //fetch user
+    let name = f('login_name').value;
+    let password = f('login_password').value;
+    let url = 'api.php?name=' + name + '&password=' + password;
+
+    fetch(url)
+        .then(response => response.json())
+        .then(body => {
+            if (body.result == 'success') {
+                User.name = body.name;
+                User.token = body.token;
+                processLogin();
+            } else {
+                //wrong password
+                f('login_wrong').style.display = 'block';
+            }
+            f('login_name').value = '';
+            f('login_password').value = '';
+        })
+
+        .catch(function (error) {
+            console.log('error');
+            // This is where you run code if the server returns any errors
+        });
+    if (User.code == NULLUSER) {
+        f('user').innerHTML = 'You are not logged in';
+    } else {
+        f('user').innerHTML = 'Hi ' + User.name;
+    }
+}
+
+function processLogin(){
+    show('main');
+    hide('login');
+    hide('create_user');
+    hide('login_wrong');
+    f('user').innerHTML = 'Hi ' + User.name + '!';
     fetchTransactions();
 }
 
+function register() {
+    hide('login');
+    show('create_user');
+}
+
 function writeVersion() {
-    f('version').innerHTML = 'version: ' + version;
+    text('version', 'version: ' + version);
 }
 
 function f(i) {
     return document.getElementById(i);
+}
+
+function show(i) {
+    f(i).style.display = 'block';
+}
+
+function hide(i) {
+    f(i).style.display = 'none';
+}
+
+function text(i, txt) {
+    f(i).innerHTML = txt;
 }
