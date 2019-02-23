@@ -9,7 +9,10 @@
     -->
     <link rel="stylesheet" href="w3.css">
     <style>
-        #main, #create_user, #login_wrong, #register_wrong {
+        #main,
+        #create_user,
+        #login_wrong,
+        #register_wrong {
             display: none;
         }
     </style>
@@ -43,13 +46,18 @@
         <div class="w3-container">
             <input id="amount" class="w3-input w3-xxxlarge w3-section" type="number" placeholder="Amount">
             <input id="category" class="w3-input w3-xxxlarge w3-section" type="text" placeholder="Category">
+            <!--Category-->
+            <div id="category_container" class="w3-container"></div>
             <input id="description" class="w3-input w3-xxxlarge w3-section" type="text" placeholder="Description">
             <button class="w3-button w3-green w3-xxxlarge w3-section" onclick="sendExpense()">Expense</button>
         </div>
         <div class="w3-container">
             <p id="transactions"></p>
         </div>
+
     </div>
+
+
     <!--Create user-->
     <div id="create_user">
         <div class="w3-container">

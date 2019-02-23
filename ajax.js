@@ -12,6 +12,7 @@ const baseurl = 'api.php';
 const version = '0.4';
 const NULLUSER = 'nulluser';
 var User = { name: 'nobody', token: NULLUSER }
+var categories = [];
 
 function sendExpense() {
     let amount = f('amount').value;
@@ -40,6 +41,7 @@ function sendExpense() {
             f('category').value = '';
             f('description').value = '';
             fetchTransactions();
+            fetchCategories();
             console.log(data);
         })
 
@@ -55,18 +57,45 @@ function fetchTransactions() {
     fetch(url)
         .then(response => response.json())
         .then(body => {
-            let t = '<table class="w3-table-all w3-xxxlarge">';
-            t += '<tr><th>Amount</th><th>Category</th><th>Description</th></tr>';
+            let t = '<table class="w3-table-all w3-xxlarge">';
+            t += '<tr><th>Amount</th><th>Category</th><th>Description</th><th>Time</th><th>Balance</th></tr>';
 
             for (var i in body) {
                 t += '<tr>';
                 t += '<td>' + body[i][0] + '</td>';
                 t += '<td>' + body[i][1] + '</td>';
                 t += '<td>' + body[i][2] + '</td>';
+                t += '<td>' + body[i][3] + '</td>';
+                t += '<td>' + body[i][4] + '</td>';
                 t += '</tr>';
             }
             t += '</table>';
             f('transactions').innerHTML = t;
+        })
+
+        .catch(function (error) {
+            console.log('error');
+            // This is where you run code if the server returns any errors
+        });
+}
+
+function insertCategory(n){
+    f('category').value = n;
+}
+
+function fetchCategories() {
+    let url = 'api.php?categories=' + User.token;
+    fetch(url)
+        .then(response => response.json())
+        .then(body => {
+            let t = '';
+            categories = body;
+            for (var i in body) {
+                t += '<button class="w3-button w3-blue w3-round-xxlarge w3-xlarge" onclick="insertCategory(\''+body[i]+'\')">';
+                t += body[i];
+                t += '</button>&nbsp;';
+            }
+            f('category_container').innerHTML = t;
         })
 
         .catch(function (error) {
@@ -118,9 +147,9 @@ function createUser() {
             f('password').value = '';
             f('email').value = '';
             console.log(body.result);
-            if(body.result == 'exists'){
+            if (body.result == 'exists') {
                 show('register_wrong');
-            }else if(body.result == 'success') {
+            } else if (body.result == 'success') {
                 hide('register_wrong');
                 User.name = body.name;
                 User.token = body.token;
@@ -142,9 +171,6 @@ function backToLogin() {
 function init() {
     writeVersion();
     fetchNumberOfUsers();
-
-    //fetchTransactions();
-    //getUser();
 }
 
 function login() {
@@ -179,13 +205,14 @@ function login() {
     }
 }
 
-function processLogin(){
+function processLogin() {
     show('main');
     hide('login');
     hide('create_user');
     hide('login_wrong');
     f('user').innerHTML = 'Hi ' + User.name + '!';
     fetchTransactions();
+    fetchCategories();
 }
 
 function register() {

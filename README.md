@@ -13,10 +13,14 @@ I was not fully satisfied all of them. I decided to write one own application an
 
 These are the upcoming tasks which have to be implemented
 
-* User login, logout, creation
-* Alter balance add column
+* User login, logout, creation DONE
+* Alter balance add column DONE
 * Expense - Income
 * Bar graph
 * Pie graph
 * Edit transaction
+* Category management
 
+# Developer diary
+
+2019-02-17 http://www.moneysaw.eu created
