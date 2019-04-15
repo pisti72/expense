@@ -7,7 +7,9 @@
 
 $response = array();
 
-$mysqli = new mysqli("localhost", "expense", "Start123", "expense");
+//$mysqli = new mysqli("localhost", "expense", "Start123", "expense");
+global $mysqli;
+$mysqli = new mysqli("c236um.forpsi.com", "b12516", "V9pebnA","b12516","3306");
 
 /* check connection */
 if (mysqli_connect_errno()) {
@@ -34,7 +36,7 @@ CREATE TABLE transactions (
   amount decimal(10,0) NOT NULL,
   balance decimal(10,0) NOT NULL,
   description varchar(100) NOT NULL,
-  timestamp timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+  createdAt timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 ) ENGINE=MyISAM DEFAULT CHARSET=latin1";
 $mysqli->query($sql);
 $sql = "ALTER TABLE transactions ADD PRIMARY KEY (id)";
@@ -65,11 +67,11 @@ $sql = "ALTER TABLE users ADD PRIMARY KEY (id)";
 if (isset($_GET['token'], $_GET['top'])) {
     $token = $_GET['token'];
     $top = $_GET['top'];
-    $query = "SELECT amount,category,description,timestamp,balance
+    $query = "SELECT amount,category,description,createdAt,balance
     FROM transactions t, users u
     WHERE u.token = '$token'
     AND t.user_id = u.id
-    ORDER BY timestamp DESC
+    ORDER BY createdAt DESC
     LIMIT $top";
     $rows = array();
     if ($result = $mysqli->query($query)) {
@@ -159,7 +161,8 @@ if (isset($_POST['category'], $_POST['amount'], $_POST['description'], $_POST['t
 }
 
 function getLastBalance($id) {
-    $query = "SELECT balance FROM transactions WHERE user_id=$id ORDER BY timestamp DESC LIMIT 1";
+    $query = "SELECT balance FROM transactions WHERE user_id=$id ORDER BY createdAt DESC LIMIT 1";
+    echo $query;
     if ($result = $mysqli->query($query)) {
         /* fetch object array */
         if ($row = $result->fetch_row()) {
